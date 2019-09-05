@@ -73,11 +73,11 @@ function face(videoElement, canvas, faceFilter) {
 // Filters take a source videoElement and a canvas. The video element contains the users
 // camera and the filter function transforms it onto the canvas element provided.
 module.exports = {
-  none: function none(videoElement, canvas) {
+  Normal: function Normal(videoElement, canvas) {
     const filter = imgData => imgData;
     return filterTask(videoElement, canvas, filter);
   },
-  red: colourFilter.bind(this, 150, 0, 0, 0),
+  red: colourFilter.bind(this, 235, 185, 155, 0),
   green: colourFilter.bind(this, 0, 150, 0, 0),
   blue: colourFilter.bind(this, 0, 0, 150, 0),
   invert: function invert(videoElement, canvas) {
@@ -143,41 +143,41 @@ module.exports = {
       return new ImageData(new Uint8ClampedArray(sobelData), imgData.width, imgData.height);
     };
     return filterTask(videoElement, canvas, filter);
-  },
-  face,
-  glasses: (videoElement, canvas) => {
-    let image;
-    let ctx;
-    return face(videoElement, canvas, positions => {
-      if (!ctx) {
-        ctx = canvas.getContext('2d');
-      }
-      if (!image) {
-        image = document.createElement('img');
-        image.src = 'https://aullman.github.io/opentok-camera-filters/images/comedy-glasses.png';
-      }
-      if (positions && positions.length > 20) {
-        const width = distance(positions[15], positions[19]) * 1.1;
-        const height = distance(positions[53], positions[20]) * 1.15;
-        const y = positions[20][1] - (0.2 * height);
-        const x = positions[19][0];
-        // Calculate the angle to draw by looking at the position of the eyes
-        // The opposite side is the difference in y
-        const opposite = positions[32][1] - positions[27][1];
-        // The adjacent side is the difference in x
-        const adjacent = positions[32][0] - positions[27][0];
-        // tan = opposite / adjacent
-        const angle = Math.atan(opposite / adjacent);
-        try {
-          ctx.translate(x, y);
-          ctx.rotate(angle);
-          ctx.drawImage(image, 0, 0, width, height);
-          ctx.rotate(-angle);
-          ctx.translate(-x, -y);
-        } catch (err) {
-          console.error(err); // eslint-disable-line
-        }
-      }
-    });
-  },
+  }, 
+  // face,
+  // glasses: (videoElement, canvas) => {
+  //   let image;
+  //   let ctx;
+  //   return face(videoElement, canvas, positions => {
+  //     if (!ctx) {
+  //       ctx = canvas.getContext('2d');
+  //     }
+  //     if (!image) {
+  //       image = document.createElement('img');
+  //       image.src = 'https://aullman.github.io/opentok-camera-filters/images/comedy-glasses.png';
+  //     }
+  //     if (positions && positions.length > 20) {
+  //       const width = distance(positions[15], positions[19]) * 1.1;
+  //       const height = distance(positions[53], positions[20]) * 1.15;
+  //       const y = positions[20][1] - (0.2 * height);
+  //       const x = positions[19][0];
+  //       // Calculate the angle to draw by looking at the position of the eyes
+  //       // The opposite side is the difference in y
+  //       const opposite = positions[32][1] - positions[27][1];
+  //       // The adjacent side is the difference in x
+  //       const adjacent = positions[32][0] - positions[27][0];
+  //       // tan = opposite / adjacent
+  //       const angle = Math.atan(opposite / adjacent);
+  //       try {  
+  //         ctx.translate(x, y);
+  //         ctx.rotate(angle);
+  //         ctx.drawImage(image, 0, 0, width, height);
+  //         ctx.rotate(-angle);
+  //         ctx.translate(-x, -y);
+  //       } catch (err) {
+  //         console.error(err); // eslint-disable-line
+  //       }
+  //     }
+  //   });
+  // },
 };
