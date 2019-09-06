@@ -1,8 +1,12 @@
 {
-  "name": "opentok-camera-filters",
-  "version": "2.0.1",
-  "description": "Streaming from a Canvas with Filters to an OpenTok Session",
+  "name": "opentok-camera-filters-new",
+  "version": "2.0.2",
+  "description": "Streaming from a Canvas with Filters to an OpenTok Session.This is a fork of opentok-camera-filters which has better filters",
   "main": "src/filter.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/parth131197/opentok-camera-filters.git"
+  },
   "scripts": {
     "test": "run-tests",
     "unit": "karma start tests/karma.conf.js --single-run"
@@ -12,7 +16,7 @@
     "opentok",
     "filters"
   ],
-  "author": "Adam Ullman",
+  "author": "Parth Gupta",
   "license": "MIT",
   "devDependencies": {
     "eslint": "^2.13.0",
