@@ -77,41 +77,24 @@ module.exports = {
     const filter = imgData => imgData;
     return filterTask(videoElement, canvas, filter);
   },
-  red: colourFilter.bind(this, 235, 185, 155, 0),
-  green: colourFilter.bind(this, 0, 150, 0, 0),
-  blue: colourFilter.bind(this, 0, 0, 150, 0),
-  invert: function invert(videoElement, canvas) {
+  Fade: colourFilter.bind(this, 125, 125, 125, 0),
+  Instant: function Instant(videoElement, canvas) {
     const filter = imgData => {
       const res = new Uint8ClampedArray(imgData.data.length);
       for (let i = 0; i < imgData.data.length; i += 4) {
-        res[i] = 255 - imgData.data[i];
-        res[i + 1] = 255 - imgData.data[i + 1];
-        res[i + 2] = 255 - imgData.data[i + 2];
-        res[i + 3] = imgData.data[i + 3];
-      }
-      const resData = new ImageData(res, imgData.width, imgData.height);
-      return resData;
-    };
-    return filterTask(videoElement, canvas, filter);
-  },
-  grayscale: function grayscale(videoElement, canvas) {
-    const filter = imgData => {
-      const res = new Uint8ClampedArray(imgData.data.length);
-      for (let i = 0; i < imgData.data.length; i += 4) {
-        // Using the luminosity algorithm for grayscale 0.21 R + 0.72 G + 0.07 B
-        // https://www.johndcook.com/blog/2009/08/24/algorithms-convert-color-grayscale/
         const inputRed = imgData.data[i];
         const inputGreen = imgData.data[i + 1];
         const inputBlue = imgData.data[i + 2];
-        res[i] = res[i + 1] = res[i + 2] = Math.round(
-          0.21 * inputRed + 0.72 * inputGreen + 0.07 * inputBlue
-        );
+        res[i] = Math.round((inputRed * 0.493) + (inputGreen * 0.869) + (inputBlue * 0.289));
+        res[i + 1] = Math.round((inputRed * 0.359) + (inputGreen * 0.696) + (inputBlue * 0.178));
+        res[i + 2] = Math.round((inputRed * 0.282) + (inputGreen * 0.544) + (inputBlue * 0.141));
         res[i + 3] = imgData.data[i + 3];
       }
       return new ImageData(res, imgData.width, imgData.height);
     };
     return filterTask(videoElement, canvas, filter);
   },
+  /*
   sepia: function sepia(videoElement, canvas) {
     const filter = imgData => {
       const res = new Uint8ClampedArray(imgData.data.length);
@@ -129,21 +112,107 @@ module.exports = {
       return new ImageData(res, imgData.width, imgData.height);
     };
     return filterTask(videoElement, canvas, filter);
-  },
-  blur: function blur(videoElement, canvas) {
+  }, */
+  // mono: colourFilter.bind(this, 80, 80, 80, 0),
+  Mono: function Mono(videoElement, canvas) {
     const filter = imgData => {
-      const blurData = tracking.Image.blur(imgData.data, imgData.width, imgData.height, 50);
-      return new ImageData(new Uint8ClampedArray(blurData), imgData.width, imgData.height);
+      const res = new Uint8ClampedArray(imgData.data.length);
+      for (let i = 0; i < imgData.data.length; i += 4) {
+        // Using the luminosity algorithm for grayscale 0.21 R + 0.72 G + 0.07 B
+        // https://www.johndcook.com/blog/2009/08/24/algorithms-convert-color-grayscale/
+        const inputRed = imgData.data[i];
+        const inputGreen = imgData.data[i + 1];
+        const inputBlue = imgData.data[i + 2];
+        res[i] = res[i + 1] = res[i + 2] = Math.round(
+          0.21 * inputRed + 0.72 * inputGreen + 0.07 * inputBlue
+        );
+        res[i + 3] = imgData.data[i + 3];
+      }
+      return new ImageData(res, imgData.width, imgData.height);
     };
     return filterTask(videoElement, canvas, filter);
   },
-  sketch: function sketch(videoElement, canvas) {
+  Noir: function Noir(videoElement, canvas) {
     const filter = imgData => {
-      const sobelData = tracking.Image.sobel(imgData.data, imgData.width, imgData.height);
-      return new ImageData(new Uint8ClampedArray(sobelData), imgData.width, imgData.height);
+      const res = new Uint8ClampedArray(imgData.data.length);
+      for (let i = 0; i < imgData.data.length; i += 4) {
+        const inputRed = imgData.data[i];
+        const inputGreen = imgData.data[i + 1];
+        const inputBlue = imgData.data[i + 2];
+        res[i] = Math.round((inputRed * 0.200) + (inputGreen * 0.500) + (inputBlue * 0.24));
+        res[i + 1] = Math.round((inputRed * 0.4) + (inputGreen * 0.7152) + (inputBlue * 0.0722));
+        res[i + 2] = Math.round((inputRed * 0.2627) + (inputGreen * 0.6780) + (inputBlue * 0.0593));
+        res[i + 3] = imgData.data[i + 3];
+      }
+      return new ImageData(res, imgData.width, imgData.height);
     };
     return filterTask(videoElement, canvas, filter);
-  }, 
+  },
+
+
+  Process: colourFilter.bind(this, 0, 50, 0, 0),
+  // blue: colourFilter.bind(this, 0, 0, 150, 0),
+  Tonal: function Noir(videoElement, canvas) {
+    const filter = imgData => {
+      const res = new Uint8ClampedArray(imgData.data.length);
+      for (let i = 0; i < imgData.data.length; i += 4) {
+        const inputRed = imgData.data[i];
+        const inputGreen = imgData.data[i + 1];
+        const inputBlue = imgData.data[i + 2];
+        res[i] = Math.round((inputRed * 0.5) + (inputGreen * 0.587) + (inputBlue * 0.114));
+        res[i + 1] = Math.round((inputRed * 0.5) + (inputGreen * 0.7152) + (inputBlue * 0.0722));
+        res[i + 2] = Math.round((inputRed * 0.5) + (inputGreen * 0.6780) + (inputBlue * 0.0593));
+        res[i + 3] = imgData.data[i + 3];
+      }
+      return new ImageData(res, imgData.width, imgData.height);
+    };
+    return filterTask(videoElement, canvas, filter);
+  },
+  // invert: function invert(videoElement, canvas) {
+  //   const filter = imgData => {
+  //     const res = new Uint8ClampedArray(imgData.data.length);
+  //     for (let i = 0; i < imgData.data.length; i += 4) {
+  //       res[i] = 255 - imgData.data[i];
+  //       res[i + 1] = 255 - imgData.data[i + 1];
+  //       res[i + 2] = 255 - imgData.data[i + 2];
+  //       res[i + 3] = imgData.data[i + 3];
+  //     }
+  //     const resData = new ImageData(res, imgData.width, imgData.height);
+  //     return resData;
+  //   };
+  //   return filterTask(videoElement, canvas, filter);
+  // },
+  Transfer: function Transfer(videoElement, canvas) {
+    const filter = imgData => {
+      const res = new Uint8ClampedArray(imgData.data.length);
+      for (let i = 0; i < imgData.data.length; i += 4) {
+        const inputRed = imgData.data[i];
+        const inputGreen = imgData.data[i + 1];
+        const inputBlue = imgData.data[i + 2];
+        res[i] = Math.round((inputRed * 0.393) + (inputGreen * 0.769) + (inputBlue * 0.189));
+        res[i + 1] = Math.round((inputRed * 0.349) + (inputGreen * 0.686) + (inputBlue * 0.168));
+        res[i + 2] = Math.round((inputRed * 0.272) + (inputGreen * 0.534) + (inputBlue * 0.131));
+        res[i + 3] = imgData.data[i + 3];
+      }
+      return new ImageData(res, imgData.width, imgData.height);
+    };
+    return filterTask(videoElement, canvas, filter);
+  },
+  
+  // blur: function blur(videoElement, canvas) {
+  //   const filter = imgData => {
+  //     const blurData = tracking.Image.blur(imgData.data, imgData.width, imgData.height, 50);
+  //     return new ImageData(new Uint8ClampedArray(blurData), imgData.width, imgData.height);
+  //   };
+  //   return filterTask(videoElement, canvas, filter);
+  // },
+  // sketch: function sketch(videoElement, canvas) {
+  //   const filter = imgData => {
+  //     const sobelData = tracking.Image.sobel(imgData.data, imgData.width, imgData.height);
+  //     return new ImageData(new Uint8ClampedArray(sobelData), imgData.width, imgData.height);
+  //   };
+  //   return filterTask(videoElement, canvas, filter);
+  // }, 
   // face,
   // glasses: (videoElement, canvas) => {
   //   let image;
